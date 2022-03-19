@@ -1,6 +1,7 @@
 from flask import Flask, flash, render_template, request, redirect, url_for
 import bcrypt
 from smtplib import SMTP
+from email.message import EmailMessage
 import mysql.connector
 
 db = mysql.connector.connect(
@@ -38,8 +39,24 @@ def registrar():
         direccion = request.form.get('direccion')
         correo = request.form.get('correo')
         clave = request.form.get('clave').encode('utf-8')
-        password = bcrypt.hashpw(clave, bcrypt.gensalt())
+        passw = bcrypt.hashpw(clave, bcrypt.gensalt())
         
+        msg = EmailMessage()
+        msg.set_content('Su empresa ha sido registrada satisfactoriamente.')
+
+        msg['Subject'] = 'Confirmación de registro'
+        msg['From'] = "davidvivas2020@itp.edu.co"
+        msg['To'] = correo
+
+        username = 'davidvivas2020@itp.edu.co'
+        password = '1085340013'
+
+        server = SMTP('smtp.gmail.com:587')
+        server.starttls()
+        server.login(username, password)
+        server.send_message(msg)
+
+        server.quit()
         
         is_valid = True
         
@@ -83,7 +100,7 @@ def registrar():
             contacto,
             direccion,
             correo,
-            password,
+            passw,
         ))
         cursor.close()
         
