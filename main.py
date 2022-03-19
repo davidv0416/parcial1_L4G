@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, request, redirect, url_for
+from flask import Flask, flash, render_template, request, redirect, session, url_for
 import bcrypt
 from smtplib import SMTP
 from email.message import EmailMessage
@@ -16,15 +16,10 @@ db.autocommit = True
 
 app = Flask(__name__)
 
-"""
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'empresas'
-"""
+
 """
 @app.get("/")
-def login():
+def log():
     return render_template("login.html")
 """
 
@@ -45,11 +40,11 @@ def registrar():
         msg.set_content('Su empresa ha sido registrada satisfactoriamente.')
 
         msg['Subject'] = 'Confirmación de registro'
-        msg['From'] = "davidvivas2020@itp.edu.co"
+        msg['From'] = ""
         msg['To'] = correo
 
-        username = 'davidvivas2020@itp.edu.co'
-        password = '1085340013'
+        username = ''
+        password = ''
 
         server = SMTP('smtp.gmail.com:587')
         server.starttls()
