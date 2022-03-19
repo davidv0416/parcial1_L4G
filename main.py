@@ -21,10 +21,11 @@ app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'empresas'
 """
-
+"""
 @app.get("/")
 def login():
     return render_template("login.html")
+"""
 
 @app.route('/registro', methods=["GET","POST"])
 def registrar():
@@ -88,10 +89,28 @@ def registrar():
         
         return redirect(url_for('login'))
 
-"""@app.route('/login', methods=["GET","POST"])
+@app.route('/login', methods=["GET","POST"])
 def login():
-    if request.method
-"""
+    if request.method == 'POST':
+        email = request.form.get('email')
+        clave = request.form.get('clave').encode('utf-8')
+        passw = bcrypt.hashpw(clave, bcrypt.gensalt())
+
+        cursor = db.cursor()
+        cursor.execute("SELECT * FROM empresas WHERE clave=%s",(clave,))
+        user = cursor.fetchone()
+        cursor.close()
+
+         
+        if (passw == user.encode('utf-8')):
+            return render_template("home.html")
+        else:
+            return "correo o contraeña incorrectos"
+        
+    else:
+        return render_template("login.html")
+    
+
 
 
 app.run(debug=True)
